@@ -20,36 +20,29 @@ import './App.css'
 
 const App = () => (
   <>
-    <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
-      <Navbar.Brand href='#home'>React-Bootstrap</Navbar.Brand>
-      <Navbar.Toggle aria-controls='responsive-navbar-nav' />
-      <Navbar.Collapse id='responsive-navbar-nav'>
-        <Nav className='mr-auto'>
-          <Nav.Link href='#'>Features</Nav.Link>
-          <Nav.Link href='#'>Pricing</Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
-
     <MemoryRouter>
-      <Container className='p-3'>
-        <Jumbotron>
-          {/* <h1 className='header'>Welcome To React-Bootstrap</h1> */}
-          <h2>
-            <ButtonToolbar className='custom-btn-toolbar'>
-              <LinkContainer to='/'>
-                <Button>Home</Button>
-              </LinkContainer>
+      <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
+        <Navbar.Brand href='#'>
+          <LinkContainer to='/'>
+            <span>Card Maker</span>
+          </LinkContainer>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+        <Navbar.Collapse id='responsive-navbar-nav'>
+          <Nav className='mr-auto'>
+            <Nav.Link href='#'>
               <LinkContainer to='/create'>
-                <Button>Create</Button>
+                <span>Creer une carte</span>
               </LinkContainer>
+            </Nav.Link>
+            <Nav.Link href='#'>
               <LinkContainer to='/list'>
-                <Button>List</Button>
+                <span>Liste</span>
               </LinkContainer>
-            </ButtonToolbar>
-          </h2>
-        </Jumbotron>
-      </Container>
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
       <>
         <Switch>
           <Route path='/create'>

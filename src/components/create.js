@@ -10,21 +10,24 @@ const Create = () => {
     power: '',
     text: ''
   })
+  const [ok, setOk] = useState(false)
 
   const addCard = async e => {
     e.preventDefault()
-    await axios
+    const response = await axios
       .post('http://localhost:4242/', {
         ...formData
       })
       .then(function (response) {
-        if (response.status === 200) {
-          setFormData({
-            name: '',
-            power: '',
-            text: ''
-          })
-        }
+        setFormData({
+          name: '',
+          power: '',
+          text: ''
+        })
+        setOk(true)
+        setTimeout(() => {
+          setOk(false)
+        }, 3000)
       })
       .catch(error => {
         if (error.response) {
@@ -45,8 +48,9 @@ const Create = () => {
     <Form>
       <Col xs={1}>
         <Form.Group controlId='card-title'>
-          <Form.Label>Power</Form.Label>
+          <Form.Label>Puissance*</Form.Label>
           <Form.Control
+            value={formData.power}
             name='power'
             size='lg'
             type='numer'
@@ -57,20 +61,22 @@ const Create = () => {
       </Col>
       <Col xs={7}>
         <Form.Group controlId='card-title'>
-          <Form.Label>Name</Form.Label>
+          <Form.Label>Nom*</Form.Label>
           <Form.Control
+            value={formData.name}
             name='name'
             size='lg'
             type='text'
-            placeholder='Scary name'
+            placeholder=''
             onChange={e => onChange(e)}
           />
         </Form.Group>
       </Col>
       <Col xs={7}>
         <Form.Group controlId='card-text'>
-          <Form.Label>Card Text</Form.Label>
+          <Form.Label>Texte de la carte</Form.Label>
           <Form.Control
+            value={formData.text}
             name='text'
             as='textarea'
             rows={3}
@@ -80,8 +86,9 @@ const Create = () => {
       </Col>
       <Col>
         <Button type='submit' className='mb-2' onClick={e => addCard(e)}>
-          Submit
+          💾
         </Button>
+        {ok ? <span>💾 👌</span> : ''}
       </Col>
     </Form>
   )

@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 import Card from './card'
-
 import './list.css'
 
 const List = () => {
   const [data, setData] = useState([])
+  const [update, setUpdate] = useState(false)
+
   useEffect(() => {
     const fetchData = async () => {
       const resq = await axios
@@ -16,6 +17,7 @@ const List = () => {
             // setData(response.data)
             console.log(response.data)
             setData(response.data)
+            console.log('updated dat')
           }
         })
         .catch(error => {
@@ -43,20 +45,21 @@ const List = () => {
         })
     }
     fetchData()
-  }, [])
+  }, [update])
 
   return (
-    <div>
-      <div className='cards'>
-        {data.map((card, index) => (
-          <Card
-            name={card.name}
-            power={card.power}
-            text={card.text}
-            key={card.name + index}
-          />
-        ))}
-      </div>
+    <div className='cards'>
+      {data.map(card => (
+        <Card
+          key={card.id}
+          id={card.id}
+          name={card.name}
+          power={card.power}
+          text={card.text}
+          passUpdate={setUpdate}
+          update={update}
+        />
+      ))}
     </div>
   )
 }
