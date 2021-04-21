@@ -2,11 +2,18 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import ReactModal from 'react-modal'
+import { MemoryRouter, Switch, Route } from 'react-router-dom'
+import { LinkContainer } from 'react-router-bootstrap'
 
+import Create from './create'
 const Card = ({ name, power, text, id, passUpdate, update }) => {
   const [modal, setModal] = useState(false)
+  const [updating, setUpdating] = useState(false)
   const showModal = () => {
     setModal(true)
+  }
+  const updateCard = () => {
+    setUpdating(true)
   }
   const closeModal = () => setModal(false)
   const deleteCard = async () => {
@@ -16,7 +23,7 @@ const Card = ({ name, power, text, id, passUpdate, update }) => {
         console.log(resp.status)
         if (resp.status === 200) console.log('200')
         passUpdate(!update)
-        closeModal
+        closeModal()
       })
       .catch(function (error) {
         console.log(error)
@@ -50,17 +57,32 @@ const Card = ({ name, power, text, id, passUpdate, update }) => {
         onRequestClose={() => closeModal()}
         shouldCloseOnOverlayClick={true}
       >
-        <div>
-          <button onClick={() => closeModal()}>❌</button>
-        </div>
-        <figure className='card card--normal' onClick={() => showModal()}>
-          <figcaption className='card__caption'>
-            <h1 className='card__name'>{name}</h1>
-            <h3 className='card__type'>{power}</h3>
-            <div className='card__stats'>{text}</div>
-          </figcaption>
-        </figure>
-        <button onClick={() => deleteCard()}>🗑️</button>
+        {updating ? (
+          <Create
+            name={name}
+            id={id}
+            power={power}
+            text={text}
+            update={update}
+            passUpdate={passUpdate}
+            closeModal={closeModal}
+          />
+        ) : (
+          <>
+            <div>
+              <button onClick={() => closeModal()}>❌</button>
+            </div>
+            <figure className='card card--normal' onClick={() => showModal()}>
+              <figcaption className='card__caption'>
+                <h1 className='card__name'>{name}</h1>
+                <h3 className='card__type'>{power}</h3>
+                <div className='card__stats'>{text}</div>
+              </figcaption>
+            </figure>
+            <button onClick={() => deleteCard()}>🗑️</button>
+            <button onClick={() => updateCard()}>🖋️</button>
+          </>
+        )}
       </ReactModal>
     </>
   )
@@ -72,7 +94,7 @@ Card.propTypes = {
   power: PropTypes.number,
   id: PropTypes.number,
   update: PropTypes.bool,
-  passUpdate: PropTypes.function
+  passUpdate: PropTypes.func
 }
 
 export default Card

@@ -1,46 +1,87 @@
 import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 
-const Create = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    power: '',
-    text: ''
-  })
+const Create = props => {
+  const [formData, setFormData] = useState(
+    props.id === null
+      ? {
+          name: '',
+          power: '',
+          text: ''
+        }
+      : {
+          name: props.name,
+          power: props.power,
+          text: props.text
+        }
+  )
   const [ok, setOk] = useState(false)
 
   const addCard = async e => {
     e.preventDefault()
-    const response = await axios
-      .post('http://localhost:4242/', {
-        ...formData
-      })
-      .then(function (response) {
-        setFormData({
-          name: '',
-          power: '',
-          text: ''
+    if (props.id !== null) {
+      const response = await axios
+        .put(`http://localhost:4242/${props.id}`, {
+          ...formData
         })
-        setOk(true)
-        setTimeout(() => {
-          setOk(false)
-        }, 3000)
-      })
-      .catch(error => {
-        if (error.response) {
-          console.log(error.response.data)
-          console.log(error.response.status)
-          console.log(error.response.headers)
-        } else if (error.request) {
-          console.log(error.request)
-        } else {
-          console.log('Error', error.message)
-        }
-        console.log(error.config)
-      })
+        .then(function (response) {
+          setFormData({
+            name: '',
+            power: '',
+            text: ''
+          })
+          setOk(true)
+          setTimeout(() => {
+            setOk(false)
+          }, 3000)
+          props.passUpdate(!props.update)
+          props.closeModal()
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response.data)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+          } else if (error.request) {
+            console.log(error.request)
+          } else {
+            console.log('Error', error.message)
+          }
+          console.log(error.config)
+        })
+    } else {
+      const response = await axios
+        .post('http://localhost:4242/', {
+          ...formData
+        })
+        .then(function (response) {
+          setFormData({
+            name: '',
+            power: '',
+            text: ''
+          })
+          setOk(true)
+          setTimeout(() => {
+            setOk(false)
+          }, 3000)
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response.data)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+          } else if (error.request) {
+            console.log(error.request)
+          } else {
+            console.log('Error', error.message)
+          }
+          console.log(error.config)
+        })
+    }
   }
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -92,5 +133,14 @@ const Create = () => {
       </Col>
     </Form>
   )
+}
+Create.propTypes = {
+  name: PropTypes.string,
+  text: PropTypes.string,
+  power: PropTypes.number,
+  id: PropTypes.number,
+  update: PropTypes.bool,
+  passUpdate: PropTypes.func,
+  closeModal: PropTypes.func
 }
 export default Create

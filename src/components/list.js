@@ -17,7 +17,7 @@ const List = () => {
             // setData(response.data)
             console.log(response.data)
             setData(response.data)
-            console.log('updated dat')
+            console.log('updated dat list')
           }
         })
         .catch(error => {
